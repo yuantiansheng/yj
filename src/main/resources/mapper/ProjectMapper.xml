@@ -1,0 +1,226 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.yj.oa.project.mapper.ProjectMapper">
+    <resultMap id="BaseResultMap" type="com.yj.oa.project.po.Project">
+        <result column="id" property="id"/>
+        <result column="name" jdbcType="VARCHAR" property="name"/>
+        <result column="unit" jdbcType="VARCHAR" property="unit"/>
+        <result column="contact" jdbcType="VARCHAR" property="contact"/>
+        <result column="mobile" jdbcType="VARCHAR" property="mobile"/>
+        <result column="addr" jdbcType="VARCHAR" property="addr"/>
+        <result column="investment" jdbcType="VARCHAR" property="investment"/>
+        <result column="status" jdbcType="INTEGER" property="status"/>
+        <result column="createTime" jdbcType="TIMESTAMP" property="createTime"/>
+        <result column="startTime" jdbcType="TIMESTAMP" property="startTime"/>
+        <result column="progress" jdbcType="INTEGER" property="progress"/>
+        <result column="memo" jdbcType="VARCHAR" property="memo"/>
+    </resultMap>
+
+    <!--添加-->
+    <insert id="insertSelective" parameterType="com.yj.oa.project.po.Project">
+
+        insert into t_project
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="name != null">
+                name,
+            </if>
+            <if test="unit != null">
+                unit,
+            </if>
+
+            <if test="contact != null">
+                contact,
+            </if>
+            <if test="mobile != null">
+                mobile,
+            </if>
+            <if test="addr != null">
+                addr,
+            </if>
+            <if test="investment != null">
+                investment,
+            </if>
+            <if test="status != null">
+                status,
+            </if>
+            <if test="createTime != null">
+                createTime,
+            </if>
+            <if test="startTime != null">
+                startTime,
+            </if>
+            <if test="progress != null">
+                progress,
+            </if>
+            <if test="memo != null">
+                memo,
+            </if>
+
+
+        </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="name != null">
+                #{name},
+            </if>
+            <if test="unit != null">
+                #{unit,jdbcType=VARCHAR},
+            </if>
+            <if test="contact != null">
+                #{contact,jdbcType=VARCHAR},
+            </if>
+            <if test="mobile != null">
+                #{mobile,jdbcType=VARCHAR},
+            </if>
+            <if test="addr != null">
+                #{addr,jdbcType=VARCHAR},
+            </if>
+            <if test="investment != null">
+                #{investment,jdbcType=VARCHAR},
+            </if>
+            <if test="status != null">
+                #{status,jdbcType=INTEGER},
+            </if>
+            <if test="createTime != null">
+                #{createTime,jdbcType=TIMESTAMP},
+            </if>
+            <if test="startTime != null">
+                #{startTime,jdbcType=TIMESTAMP},
+            </if>
+            <if test="progress != null">
+                #{progress,jdbcType=INTEGER},
+            </if>
+            <if test="memo != null">
+                #{memo,jdbcType=VARCHAR},
+            </if>
+        </trim>
+    </insert>
+
+    <!--删除-->
+    <delete id="deleteByPrimaryKeys" parameterType="Integer">
+        delete from t_project
+        where id IN
+        <foreach collection="array" open="(" separator="," close=")" item="id">
+            #{id}
+        </foreach>
+    </delete>
+
+    <!--修改-->
+    <update id="updateByPrimaryKeySelective" parameterType="com.yj.oa.project.po.Project">
+
+        update t_project
+        <set>
+            <if test="name != null">
+                name=#{name},
+            </if>
+            <if test="unit != null">
+                unit=#{unit},
+            </if>
+            <if test="contact != null">
+                contact=#{contact},
+            </if>
+            <if test="mobile != null">
+                mobile=#{mobile},
+            </if>
+            <if test="addr != null">
+                addr=#{addr},
+            </if>
+            <if test="investment != null">
+                investment=#{investment},
+            </if>
+            <if test="status != null">
+                status=#{status},
+            </if>
+            <if test="createTime != null">
+                createTime=#{createTime},
+            </if>
+            <if test="startTime != null">
+                startTime=#{startTime},
+            </if>
+            <if test="progress != null">
+                progress=#{progress},
+            </if>
+            <if test="memo != null">
+                memo=#{memo},
+            </if>
+        </set>
+        where id = #{id}
+    </update>
+
+    <!--主键查询-->
+    <select id="selectByPrimaryKey" parameterType="Integer" resultMap="BaseResultMap">
+    SELECT *
+    FROM
+    t_project
+    WHERE id=#{id}
+  </select>
+
+
+    <!--名字查询-->
+    <select id="selectByName" parameterType="String" resultMap="BaseResultMap">
+    SELECT *
+    FROM
+    t_project
+    WHERE name=#{name}
+  </select>
+
+    <!--名字查询-->
+    <select id="selectByStatus" parameterType="Integer" resultMap="BaseResultMap">
+    SELECT *
+    FROM
+    t_project
+    WHERE status > #{status}
+  </select>
+
+
+    <!--查询所有-->
+    <select id="selectProjectList" parameterType="com.yj.oa.project.po.Project" resultMap="BaseResultMap">
+        SELECT * from t_project
+        <where>
+            <if test="name !=null and name!=''">
+                and name=#{name}
+            </if>
+            <if test="unit !=null and unit!=''">
+                and unit=#{unit}
+            </if>
+            <if test="contact !=null and contact!=''">
+                and contact=#{contact}
+            </if>
+            <if test="addr !=null and addr!=''">
+                and addr=#{addr}
+            </if>
+            <if test="status !=null and status!='' or status==0">
+                and status=#{status}
+            </if>
+            <if test="beginTime !=null">
+                <![CDATA[   and DATE_FORMAT(createTime, '%Y-%m-%d')>=  DATE_FORMAT(#{beginTime}, '%Y-%m-%d')   ]]>
+            </if>
+            <if test="overTime !=null">
+                <![CDATA[  and DATE_FORMAT(createTime, '%Y-%m-%d') <= DATE_FORMAT(#{overTime}, '%Y-%m-%d')    ]]>
+            </if>
+        </where>
+    </select>
+    <!--检验名字一性-->
+    <select id="checkNameUnique" parameterType="String" resultMap="BaseResultMap">
+    select * from t_project
+    where name=#{name}
+  </select>
+
+
+    <!--修改项目状态-->
+    <update id="updateByName" parameterType="com.yj.oa.project.po.Project">
+        update t_project
+        <set>
+            <if test="status != null">
+                status=#{status},
+            </if>
+            <if test="startTime != null">
+                startTime=#{startTime},
+            </if>
+            <if test="progress != null">
+                progress=#{progress},
+            </if>
+        </set>
+        where name = #{name}
+    </update>
+
+</mapper>

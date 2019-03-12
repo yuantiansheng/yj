@@ -1,0 +1,123 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.yj.oa.project.mapper.EnterpriseBaseInfoMapper">
+    <resultMap id="BaseResultMap" type="com.yj.oa.project.po.enterprise.EnterpriseBaseInfo">
+        <id column="enterpriseId" property="enterpriseId" jdbcType="INTEGER"/>
+        <result column="enterpriseName" property="enterpriseName" jdbcType="VARCHAR"/>
+        <result column="enterpriseCode" property="enterpriseCode" jdbcType="VARCHAR"/>
+        <result column="corporate" property="corporate" jdbcType="VARCHAR"/>
+        <result column="mobile" property="mobile" jdbcType="VARCHAR"/>
+        <result column="createTime" property="createTime" jdbcType="TIMESTAMP"/>
+    </resultMap>
+    <sql id="Base_Column_List">
+    enterpriseId, enterpriseName, enterpriseCode, corporate, mobile, createTime
+  </sql>
+
+    <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.Integer">
+        select
+        <include refid="Base_Column_List"/>
+        from t_enterprise_baseinfo
+        where enterpriseId = #{enterpriseId,jdbcType=INTEGER}
+    </select>
+
+    <delete id="deleteByPrimaryKeys" parameterType="java.lang.Integer">
+        delete from t_enterprise_baseinfo
+        where enterpriseId IN
+        <foreach collection="array" item="enterpriseId" open="(" separator="," close=")">
+        #{enterpriseId}
+    </foreach>
+    </delete>
+
+    <select id="selectEnterpriseBaseInfoList" parameterType="com.yj.oa.project.po.enterprise.EnterpriseBaseInfo" resultMap="BaseResultMap">
+        select
+        <include refid="Base_Column_List"/>
+        from t_enterprise_baseinfo
+        <where>
+            <if test="enterpriseName !=null and enterpriseName!=''">
+                and enterpriseName =#{enterpriseName}
+            </if>
+            <if test="enterpriseCode !=null and enterpriseCode!=''">
+                and enterpriseCode =#{enterpriseCode}
+            </if>
+            <if test="corporate !=null and corporate!=''">
+                and corporate =#{corporate}
+            </if>
+            <if test="mobile !=null and mobile!=''">
+                and mobile =#{mobile}
+            </if>
+            <if test="beginTime !=null">
+                <![CDATA[   and DATE_FORMAT(createTime, '%Y-%m-%d')>=  DATE_FORMAT(#{beginTime}, '%Y-%m-%d')   ]]>
+            </if>
+            <if test="overTime !=null">
+                <![CDATA[  and DATE_FORMAT(createTime, '%Y-%m-%d') <= DATE_FORMAT(#{overTime}, '%Y-%m-%d')    ]]>
+            </if>
+        </where>
+
+    </select>
+
+    <insert id="insertSelective" parameterType="com.yj.oa.project.po.enterprise.EnterpriseBaseInfo">
+        insert into t_enterprise_baseinfo
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="enterpriseId != null">
+                enterpriseId,
+            </if>
+            <if test="enterpriseName != null">
+                enterpriseName,
+            </if>
+            <if test="enterpriseCode != null">
+                enterpriseCode,
+            </if>
+            <if test="corporate != null">
+                corporate,
+            </if>
+            <if test="mobile != null">
+                mobile,
+            </if>
+            <if test="createTime != null">
+                createTime,
+            </if>
+        </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="enterpriseId != null">
+                #{enterpriseId,jdbcType=INTEGER},
+            </if>
+            <if test="enterpriseName != null">
+                #{enterpriseName,jdbcType=VARCHAR},
+            </if>
+            <if test="enterpriseCode != null">
+                #{enterpriseCode,jdbcType=VARCHAR},
+            </if>
+            <if test="corporate != null">
+                #{corporate,jdbcType=VARCHAR},
+            </if>
+            <if test="mobile != null">
+                #{mobile,jdbcType=VARCHAR},
+            </if>
+            <if test="createTime != null">
+                #{createTime,jdbcType=TIMESTAMP},
+            </if>
+        </trim>
+    </insert>
+
+    <update id="updateByPrimaryKeySelective" parameterType="com.yj.oa.project.po.enterprise.EnterpriseBaseInfo">
+        update t_enterprise_baseinfo
+        <set>
+            <if test="enterpriseName != null">
+                enterpriseName = #{enterpriseName,jdbcType=VARCHAR},
+            </if>
+            <if test="enterpriseCode != null">
+                enterpriseCode = #{enterpriseCode,jdbcType=VARCHAR},
+            </if>
+            <if test="corporate != null">
+                corporate = #{corporate,jdbcType=VARCHAR},
+            </if>
+            <if test="mobile != null">
+                mobile = #{mobile,jdbcType=VARCHAR},
+            </if>
+            <if test="createTime != null">
+                createTime = #{createTime,jdbcType=TIMESTAMP},
+            </if>
+        </set>
+        where enterpriseId = #{enterpriseId,jdbcType=INTEGER}
+    </update>
+</mapper>

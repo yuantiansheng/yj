@@ -1,0 +1,139 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.yj.oa.project.mapper.EquipMapper">
+    <resultMap id="BaseResultMap" type="com.yj.oa.project.po.enterprise.Equip">
+        <id column="id" property="id" jdbcType="INTEGER"/>
+        <result column="code" property="code" jdbcType="VARCHAR"/>
+        <result column="name" property="name" jdbcType="VARCHAR"/>
+        <result column="number" property="number" jdbcType="INTEGER"/>
+        <result column="description" property="description" jdbcType="VARCHAR"/>
+        <result column="createTime" property="createTime" jdbcType="TIMESTAMP"/>
+        <result column="person" property="person" jdbcType="VARCHAR"/>
+        <result column="memo" property="memo" jdbcType="VARCHAR"/>
+    </resultMap>
+
+    <sql id="Base_Column_List">
+    id, code, name, number, description, createTime, person, memo
+  </sql>
+
+    <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.Integer">
+        select
+        <include refid="Base_Column_List"/>
+        from t_equip
+        where id = #{id,jdbcType=INTEGER}
+    </select>
+
+    <delete id="deleteByPrimaryKeys" parameterType="java.lang.Integer">
+        delete from t_equip
+        where id IN
+        <foreach collection="array" item="id" open="(" separator="," close=")">
+            #{id}
+        </foreach>
+    </delete>
+
+    <select id="selectEquipList" parameterType="com.yj.oa.project.po.enterprise.Equip"
+            resultMap="BaseResultMap">
+        select
+        <include refid="Base_Column_List"/>
+        from t_equip
+        <where>
+            <if test="code !=null and code!=''">
+                and code =#{code}
+            </if>
+            <if test="name !=null and name!=''">
+                and name =#{name}
+            </if>
+            <if test="person !=null and person!=''">
+                and person =#{person}
+            </if>
+            <if test="beginTime !=null">
+                <![CDATA[   and DATE_FORMAT(createTime, '%Y-%m-%d')>=  DATE_FORMAT(#{beginTime}, '%Y-%m-%d')   ]]>
+            </if>
+            <if test="overTime !=null">
+                <![CDATA[  and DATE_FORMAT(createTime, '%Y-%m-%d') <= DATE_FORMAT(#{overTime}, '%Y-%m-%d')    ]]>
+            </if>
+        </where>
+
+    </select>
+
+    <insert id="insertSelective" parameterType="com.yj.oa.project.po.enterprise.Equip">
+        insert into t_equip
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="id != null">
+                id,
+            </if>
+            <if test="code != null">
+                code,
+            </if>
+            <if test="name != null">
+                name,
+            </if>
+            <if test="number != null">
+                number,
+            </if>
+            <if test="description != null">
+                description,
+            </if>
+            <if test="createTime != null">
+                createTime,
+            </if>
+            <if test="person != null">
+                person,
+            </if>
+            <if test="memo != null">
+                memo,
+            </if>
+        </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="id != null">
+                #{id,jdbcType=INTEGER},
+            </if>
+            <if test="code != null">
+                #{code,jdbcType=VARCHAR},
+            </if>
+            <if test="name != null">
+                #{name,jdbcType=INTEGER},
+            </if>
+            <if test="number != null">
+                #{number,jdbcType=VARCHAR},
+            </if>
+            <if test="description != null">
+                #{description,jdbcType=VARCHAR},
+            </if>
+            <if test="createTime != null">
+                #{createTime,jdbcType=TIMESTAMP},
+            </if>
+            <if test="person != null">
+                #{person,jdbcType=VARCHAR},
+            </if>
+            <if test="memo != null">
+                #{memo,jdbcType=VARCHAR},
+            </if>
+        </trim>
+    </insert>
+
+    <update id="updateByPrimaryKeySelective" parameterType="com.yj.oa.project.po.enterprise.Equip">
+        update t_equip
+        <set>
+            <if test="code != null">
+                code = #{code,jdbcType=VARCHAR},
+            </if>
+            <if test="name != null">
+                name = #{name,jdbcType=VARCHAR},
+            </if>
+            <if test="number != null">
+                number = #{number,jdbcType=INTEGER},
+            </if>
+            <if test="description != null">
+                description = #{description,jdbcType=VARCHAR},
+            </if>
+            <if test="person != null">
+                person = #{person,jdbcType=VARCHAR},
+            </if>
+            <if test="memo != null">
+                memo = #{memo,jdbcType=VARCHAR},
+            </if>
+        </set>
+        where id = #{id,jdbcType=INTEGER}
+    </update>
+</mapper>
